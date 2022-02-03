@@ -1,0 +1,75 @@
+<div class="container">
+
+  <ngb-accordion #a="ngbAccordion" activeIds="custom-panel-1">
+    <ngb-panel id="custom-panel-1">
+      <ng-template ngbPanelHeader let-opened="opened">
+        <div class="d-flex align-items-center justify-content-between">
+          <h5>Make a transaction </h5>
+        </div>
+      </ng-template>
+      <ng-template ngbPanelContent>
+        <div class="operationDiv">
+          <label for="description">Description: </label>
+          <input type="text" class="form-control operation" id="description" placeholder=""
+            [(ngModel)]="transaction.description">
+
+
+          <div class="input-group" style="margin : 1%">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">$</span>
+            </div>
+            <input type="number" step="0.01" min=0 class="form-control" id="amount" placeholder="0.00"
+              [(ngModel)]="transaction.amount">
+          </div>
+
+          <select class="form-control" [(ngModel)]="typeTransaction">
+            <option value='DEBIT'>Debit</option>
+            <option value="CREDIT">Credit</option>
+          </select>
+
+
+          <button type="button" class="btn btn-primary" (click)="saveTransaction()" style="margin : 1%"
+            [disabled]="!transaction.amount">Save</button>
+
+        </div>
+
+        <app-toaster [errorMessage]="errorMessage" type="danger"></app-toaster>
+
+      </ng-template>
+    </ngb-panel>
+  </ngb-accordion>
+
+  <div class="row">
+    <div class="col-md-12">
+      <hr />
+      <p>
+        <strong>Sort Transactions by:</strong>
+        <select [(ngModel)]="transType" class="form-control" (ngModelChange)="filter($event)">
+          <option value='all'>All</option>
+          <option value='credit'>Credit</option>
+          <option value='debit'>Debit</option>
+        </select>
+      </p>
+      <table class="table table-striped table-bordered table-condensed">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Balance After Transaction </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let operation of operations;">
+            <td> {{operation.operationDate| date:' dd/MM/yyyy, HH:mm'}} </td>
+            <td> {{operation.operationName}} </td>
+            <td width="30%"> {{operation.description}} </td>
+            <td> {{operation.operationAmount | currency }}</td>
+            <td> {{operation.balanceAfterTransaction | currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
